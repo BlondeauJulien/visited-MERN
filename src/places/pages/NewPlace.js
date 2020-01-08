@@ -6,8 +6,6 @@ import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/util/valida
 import { useForm } from '../../shared/hooks/form-hook';
 import './PlaceForm.css';
 
-
-
 const NewPlace = () => {
     const [formState, inputHandler] = useForm({
         title: {
