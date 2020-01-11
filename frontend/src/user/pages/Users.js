@@ -1,11 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 
-import UsersList from '../components/UsersList'
+import UsersList from '../components/UsersList';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 const Users = () => {
-    const USERS = [{id: 'u1', name: 'Julien', image:`https://www.ef.com/wwen/blog/wp-content/uploads/2018/05/Dublin_is_the_Silicon_Valley_of_Europe-and_the_hot_new_place_to_study_English_blog-hero_low.jpg`, places: 3}]
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+    const [loadedUsers, setLoadedUsers] = useState()
 
-    return <UsersList items={USERS}/>
+    useEffect(() => {
+        //technically we could turn useEffect into an async func but it's really bad code
+        // instead best practice is to use an ifee
+        const sendRequest = async () => {
+            setIsLoading(true)
+            try {
+                const response = await fetch('http://localhost:5000/api/users');
+                const responseData = await response.json();
+
+                if(!response.ok) {
+					throw new Error(responseData.message); 
+				}
+    
+                setLoadedUsers(responseData.users);
+            } catch (err) {
+                setError(err.message || 'Something went wrong, please try again.');
+            }
+            setIsLoading(false);
+        }
+        sendRequest();
+    }, [])
+
+    const errorHandler = () => {
+        setError(null);
+    }
+
+    return (
+        <Fragment>
+			<ErrorModal error={error} onClear={errorHandler}/>
+            {isLoading && (
+                <div className="center">
+                    <LoadingSpinner/>
+                </div>
+            )}
+            {!isLoading && loadedUsers && <UsersList items={loadedUsers}/>}
+        </Fragment>
+    )
 }
 
 export default Users
