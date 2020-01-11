@@ -58,12 +58,37 @@ const Auth = () => {
     
     const authSubmitHandler = async e => {
 		e.preventDefault();
+		setIsLoading(true);
 		
 		if(isLoginMode) {
+			try {
+				//Note this wont failt if the response is an error so we will gave to handle that
+				const response = await fetch('http://localhost:5000/api/users/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						email: formState.inputs.email.value,
+						password: formState.inputs.password.value
+					})
+				});
 
+				const responseData = await response.json();
+
+				if(!response.ok) {
+					throw new Error(responseData.message); 
+				}
+
+				console.log(responseData);
+				setIsLoading(false);
+				auth.login();
+			} catch (err) {
+				setIsLoading(false);
+				setError(err.message || 'Something went wrong, please try again.');
+			}
 		} else {
 			try {
-				setIsLoading(true);
 				//Note this wont failt if the response is an error so we will gave to handle that
 				const response = await fetch('http://localhost:5000/api/users/signup', {
 					method: 'POST',
@@ -85,7 +110,6 @@ const Auth = () => {
 					throw new Error(responseData.message); // all of our error response got a message
 				}
 
-				console.log(responseData);
 				setIsLoading(false);
 				auth.login();
 			} catch (err) {
