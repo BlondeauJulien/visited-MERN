@@ -3,14 +3,14 @@ import React, { useEffect, useState, Fragment } from 'react'
 import UsersList from '../components/UsersList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const Users = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
-    const [loadedUsers, setLoadedUsers] = useState()
+    const [loadedUsers, setLoadedUsers] = useState();
+    const { isLoading, error, clearError, sendRequest} = useHttpClient();
 
     useEffect(() => {
-        //technically we could turn useEffect into an async func but it's really bad code
+      /*   //technically we could turn useEffect into an async func but it's really bad code
         // instead best practice is to use an ifee
         const sendRequest = async () => {
             setIsLoading(true)
@@ -28,16 +28,22 @@ const Users = () => {
             }
             setIsLoading(false);
         }
-        sendRequest();
-    }, [])
+        sendRequest(); */
 
-    const errorHandler = () => {
-        setError(null);
-    }
+        const fetchUsers = async () => {
+            try {
+                const responseData = await sendRequest('http://localhost:5000/api/users');
+                setLoadedUsers(responseData.users);
+            } catch (err) {
+
+            }
+        };
+        fetchUsers();
+    }, [sendRequest])
 
     return (
         <Fragment>
-			<ErrorModal error={error} onClear={errorHandler}/>
+			<ErrorModal error={error} onClear={clearError}/>
             {isLoading && (
                 <div className="center">
                     <LoadingSpinner/>
