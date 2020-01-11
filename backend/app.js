@@ -10,6 +10,15 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    // the '*' allow access to any domain so it's not secure but for our app it's ok as it won't be deploy
+    // We could have put http://localhost:3000/
+    res.setHeader('Access-Control-Allow-Origin', '*'); // allow any domain to send requests
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, x-Requested-With, Content-Type, Accept, Authorization'); // What header it can expect and accept
+    res.setHeader('Access-Control-Allow-Methods', 'Get, POST, PATCH, DELETE');
+    next();
+})
+
 app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes)
 
