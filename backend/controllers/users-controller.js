@@ -44,17 +44,17 @@ const signup = async (req, res, next) => {
         );
         return next(error);
     }
+    let filePath = req.file.path.replace(/\\/g, "/");
 
     const createdUser = new User({
         name,
         email,
         password,
         places: [],
-        image: 'https://i.pinimg.com/originals/b4/f9/a7/b4f9a703222d96c5ed72ac1b94aeca4e.png',
+        image: filePath, 
     })
 
     try {
-        console.log(createdUser)
         await createdUser.save();
     } catch (err) {
         const error = new HttpError('signin failed, please try again', 500);

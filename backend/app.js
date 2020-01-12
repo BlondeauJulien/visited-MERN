@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -10,12 +13,14 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use('/uploads/images', express.static(path.join('uploads', 'images')))
+
 app.use((req, res, next) => {
     // the '*' allow access to any domain so it's not secure but for our app it's ok as it won't be deploy
     // We could have put http://localhost:3000/
     res.setHeader('Access-Control-Allow-Origin', '*'); // allow any domain to send requests
     res.setHeader('Access-Control-Allow-Headers', 'Origin, x-Requested-With, Content-Type, Accept, Authorization'); // What header it can expect and accept
-    res.setHeader('Access-Control-Allow-Methods', 'Get, POST, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
     next();
 })
 
@@ -28,6 +33,11 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
+    if(req.file) {
+        fs.unlink(req.file.path, (err) => {
+            console.log(err); // callback err in case the the deletion of the file doesn't work
+        });
+    }
     if(res.headerSent) {
         // check if our response has already been sent
         // if this is the case we return next with the error (which mean we don't send an error of our own becaue we can only send one response total)

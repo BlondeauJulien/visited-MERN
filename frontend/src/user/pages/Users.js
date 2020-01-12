@@ -39,8 +39,8 @@ const Users = () => {
             }
         };
         fetchUsers();
-    }, [sendRequest])
 
+    }, [sendRequest])
     return (
         <Fragment>
 			<ErrorModal error={error} onClear={clearError}/>
