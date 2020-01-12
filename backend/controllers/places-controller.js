@@ -71,12 +71,14 @@ const createPlace = async (req, res, next) => {
         return next(error);
     }
 
+    let filePath = req.file.path.replace(/\\/g, "/");
+
     const createdPlace = new Place({
         title,
         description,
         address,
         location: coordinates,
-        image: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/71/33/e6.jpg',
+        image: filePath,
         creator
     });
 
