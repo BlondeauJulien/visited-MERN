@@ -4,6 +4,7 @@ import Card from '../../shared/components/UIElements/Card';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { useForm } from '../../shared/hooks/form-hook';
@@ -35,7 +36,8 @@ const Auth = () => {
 			setFormData(
 				{
 					...formState.inputs,
-					name: undefined
+					name: undefined,
+					image: undefined
 				},
 				formState.inputs.email.isValid && formState.inputs.password.isValid
 			);
@@ -45,6 +47,10 @@ const Auth = () => {
 					...formState.inputs,
 					name: {
 						value: '',
+						isValid: false
+					},
+					image: {
+						value: null,
 						isValid: false
 					}
 				},
@@ -57,6 +63,8 @@ const Auth = () => {
 
 	const authSubmitHandler = async (e) => {
 		e.preventDefault();
+
+		console.log(formState.inputs)
 
 		if (isLoginMode) {
 			try {
@@ -119,6 +127,9 @@ const Auth = () => {
 							errorText="Please enter a name."
 							onInput={inputHandler}
 						/>
+					)}
+					{!isLoginMode && (
+						<ImageUpload id="image" center onInput={inputHandler}/>
 					)}
 					<Input
 						id="email"
