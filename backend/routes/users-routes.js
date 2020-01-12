@@ -2,13 +2,15 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const usersControllers = require('../controllers/users-controller');
+const fileUpload = require('../middleware/file.upload');
 
 const router = express.Router();
 
 router.get('/', usersControllers.getUsers);
 
 router.post(
-    '/signup', 
+    '/signup',
+    fileUpload.single('image'), //we expect an image key that should hold our image
     [
         check('name').not().isEmpty(),
         check('email').normalizeEmail().isEmail(),
