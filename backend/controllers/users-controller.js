@@ -111,7 +111,7 @@ const login = async (req, res, next) => {
     if(!existingUser) {
         const error = new HttpError(
             'Invalid credential', 
-            401
+            403
         );
         return next(error);
     }
