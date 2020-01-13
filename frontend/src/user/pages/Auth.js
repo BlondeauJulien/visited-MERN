@@ -82,7 +82,7 @@ const Auth = () => {
 				);
 
 
-				auth.login(responseData.user.id);
+				auth.login(responseData.userId, responseData.token);
 			} catch (err) {
 				
 			}
@@ -101,7 +101,7 @@ const Auth = () => {
 					formData // with formData, the fetch api automatically send the right headers so we don't need to add a header object
 				);
 
-				auth.login(responseData.user.id);
+				auth.login(responseData.userId, responseData.token);
 			} catch (err) {
 
 			}
