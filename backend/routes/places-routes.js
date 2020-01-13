@@ -3,12 +3,19 @@ const { check } = require('express-validator');
 
 const placesControllers = require('../controllers/places-controller');
 const fileUpload = require('../middleware/file-upload');
+const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
 router.get('/:pid', placesControllers.getPlaceById);
 
 router.get('/user/:uid', placesControllers.getPlacesByUserId);
+
+//keep in mind that a request pass throught our file from top to bottom so the 2 routes /:pid & /user/:uid are public
+// and the one after this function are private because the middleware is used before the request arrive to the appropriate route
+router.use(checkAuth);
+
+// Any of these following routes can only be reached with a valid token
 
 router.post(
     '/', 
