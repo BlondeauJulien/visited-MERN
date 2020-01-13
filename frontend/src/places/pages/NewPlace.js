@@ -54,7 +54,6 @@ const NewPlace = () => {
                 'POST',
                 formData
             )
-            console.log('here7')
             history.push('/');
         } catch (err) {
 
